@@ -1,122 +1,76 @@
 import React, { useRef } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import action1 from '../Images/Genrepic/Action1.jpg';
-import action2 from '../Images/Genrepic/Action2.jpg';
-import action3 from '../Images/Genrepic/Action3.jpg';
-import action4 from '../Images/Genrepic/Action4.jpg';
+import { Link } from 'react-router-dom';
+import { genres } from '../components/Data/Data';
+import { ChevronRight, ChevronLeft } from 'lucide-react';
 
-import comedy1 from '../Images/Genrepic/Comedy1.jpg';
-import comedy2 from '../Images/Genrepic/Comedy2.jpg';
-import comedy3 from '../Images/Genrepic/Comedy3.jpg';
-import comedy4 from '../Images/Genrepic/Comedy4.jpg';
+export default function GenreSection() {
+  const scrollContainerRef = useRef(null);
 
-import adventure1 from '../Images/Genrepic/Adventure1.jpg';
-import adventure2 from '../Images/Genrepic/Adventure2.jpg';
-import adventure3 from '../Images/Genrepic/Adventure3.jpg';
-import adventure4 from '../Images/Genrepic/Adventure4.jpg';
-
-import horror1 from '../Images/Genrepic/Horror1.jpg';
-import horror2 from '../Images/Genrepic/Horror2.jpg';
-import horror3 from '../Images/Genrepic/Horror3.jpg';
-import horror4 from '../Images/Genrepic/Horror4.jpg';
-
-import mystery1 from '../Images/Genrepic/Mystery1.jpg';
-import mystery2 from '../Images/Genrepic/Mystery2.jpg';
-import mystery3 from '../Images/Genrepic/Mystery3.jpg';
-import mystery4 from '../Images/Genrepic/Mystery4.jpg';
-
-import drama1 from '../Images/Genrepic/Drama1.jpg';
-import drama2 from '../Images/Genrepic/Drama2.jpg';
-import drama3 from '../Images/Genrepic/Drama3.jpg';
-import drama4 from '../Images/Genrepic/Drama4.jpg';
-
-import romance1 from '../Images/Genrepic/Romance1.jpg';
-import romance2 from '../Images/Genrepic/Romance2.jpg';
-import romance3 from '../Images/Genrepic/Romance3.jpg';
-import romance4 from '../Images/Genrepic/Romance4.jpg';
-
-import thriller1 from '../Images/Genrepic/Thriller1.jpg';
-import thriller2 from '../Images/Genrepic/Thriller2.jpg';
-import thriller3 from '../Images/Genrepic/Thriller3.jpg';
-import thriller4 from '../Images/Genrepic/Thriller4.jpg';
-
-import history1 from '../Images/Genrepic/History1.jpg';
-import history2 from '../Images/Genrepic/History2.jpg';
-import history3 from '../Images/Genrepic/History3.jpg';
-import history4 from '../Images/Genrepic/History4.jpg';
-
-const genres = [
-  { name: 'Action', images: [action1, action2, action3, action4] },
-  { name: 'Comedy', images: [comedy1, comedy2, comedy3, comedy4] },
-  { name: 'Adventure', images: [adventure1, adventure2, adventure3, adventure4] },
-  { name: 'Horror', images: [horror1, horror2, horror3, horror4] },
-  { name: 'Mystery', images: [mystery1, mystery2, mystery3, mystery4] },
-  { name: 'Drama', images: [drama1, drama2, drama3, drama4] },
-  { name: 'Romance', images: [romance1, romance2, romance3, romance4] },
-  { name: 'Thriller', images: [thriller1, thriller2, thriller3, thriller4] },
-  { name: 'History', images: [history1, history2, history3, history4] },
-];
-
-export function GenreSection() {
-  const scrollRef = useRef(null);
-
-  const scrollLeft = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -500, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 500, behavior: 'smooth' });
+  const scroll = (direction) => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 300;
+      const newScrollPosition = scrollContainerRef.current.scrollLeft + 
+        (direction === 'right' ? scrollAmount : -scrollAmount);
+      
+      scrollContainerRef.current.scrollTo({
+        left: newScrollPosition,
+        behavior: 'smooth'
+      });
     }
   };
 
   return (
-    <section className="bg-dark py-12 mt-12  ">
-      <div className="container mx-auto px-0 relative">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6 -ml-32">
-          <h3 className="text-2xl font-bold text-white">Genres</h3>
-        </div>
-
-        {/* Scrollable Genre List */}
+    <div className="min-h-[50vh] bg-black text-white mt-24 ">
+      <div className="container mx-auto px-4">
+        <h1 className="text-2xl font-bold mb-6 -ml-32">Genres</h1>
+        
         <div className="relative">
-          {/* Left Scroll Button */}
+          {/* Left Arrow */}
           <button
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-gray-800 p-3 rounded-full hover:bg-gray-700"
-            onClick={scrollLeft}
+            onClick={() => scroll('left')}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-gray-800 rounded-full p-2 hover:bg-gray-700 transition-colors"
+            aria-label="Scroll left"
           >
-            <ChevronLeft className="w-8 h-8 text-white" />
+            <ChevronLeft className="w-6 h-6 text-white" />
           </button>
 
-          {/* Scrollable Content */}
+          {/* Scrollable Container */}
           <div
-            ref={scrollRef}
-            className="flex overflow-hidden gap-16 px-48"
-            style={{ scrollBehavior: 'smooth' }}
+            ref={scrollContainerRef}
+            className="flex gap-16 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {genres.map((genre) => (
-              <div key={genre.name} className="flex-shrink-0 w-64 space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  {genre.images.map((image, index) => (
-                    <img key={index} src={image} alt={genre.name} className="w-full h-32 object-cover rounded-lg" />
-                  ))}
+              <Link
+                key={genre.id}
+                to={`/genre/${genre.id}`}
+                className="flex-none relative group"
+              >
+                <div className="w-48 h-72 relative rounded-lg overflow-hidden">
+                  <img
+                    src={genre.image}
+                    alt={genre.name}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                  <div className="absolute bottom-4 left-4">
+                    <h2 className="text-xl font-bold text-white">{genre.name}</h2>
+                  </div>
                 </div>
-                <h4 className="text-white text-center font-medium text-xl">{genre.name}</h4>
-              </div>
+              </Link>
             ))}
           </div>
 
-          {/* Right Scroll Button */}
+          {/* Right Arrow */}
           <button
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10  bg-gray-800 p-3 rounded-full hover:bg-gray-700"
-            onClick={scrollRight}
+            onClick={() => scroll('right')}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-gray-800 rounded-full p-2 hover:bg-gray-700 transition-colors"
+            aria-label="Scroll right"
           >
-            <ChevronRight className="w-8 h-8 text-white" />
+            <ChevronRight className="w-6 h-6 text-white" />
           </button>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

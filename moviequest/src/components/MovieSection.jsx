@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Check, Bookmark, ChevronRight, ChevronLeft } from "lucide-react";
+import { Link } from 'react-router-dom';
+import { ChevronRight, ChevronLeft } from "lucide-react";
 
 export function MovieSection({ title, movies }) {
   const scrollRef = useRef(null);
@@ -26,17 +27,22 @@ export function MovieSection({ title, movies }) {
       }
     };
 
-    setTimeout(checkScroll, 100); 
+    if (scrollRef.current) {
+      checkScroll();
+      scrollRef.current.addEventListener("scroll", checkScroll);
+    }
 
-    const scrollContainer = scrollRef.current;
-    scrollContainer?.addEventListener("scroll", checkScroll);
-    return () => scrollContainer?.removeEventListener("scroll", checkScroll);
-  }, [movies]); 
+    return () => {
+      if (scrollRef.current) {
+        scrollRef.current.removeEventListener("scroll", checkScroll);
+      }
+    };
+  }, [movies]);
 
   return (
     <section className="bg-black py-12">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-6 -ml-32">
+        <div className="flex justify-between items-center mb-6">
           <h3 className="text-2xl font-bold text-white">{title}</h3>
         </div>
 
@@ -52,36 +58,23 @@ export function MovieSection({ title, movies }) {
 
           <div
             ref={scrollRef}
-            className="flex space-x-12 overflow-hidden p-4"
-            style={{ scrollBehavior: "smooth", whiteSpace: "nowrap" }}
+            className="flex gap-16 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {movies.map((movie) => (
-              <div key={movie.id} className="flex-none w-56 relative group">
-                <img
-                  src={movie.image}
-                  alt={movie.title}
-                  className="w-full h-72 object-cover rounded-lg"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
-                  <div className="absolute bottom-0 p-4 w-full">
-                    <h4 className="text-white font-medium">{movie.title}</h4>
-                    <div className="flex space-x-2 mt-2">
-                      <button
-                        className="p-2 rounded-full bg-gray-700 hover:bg-red-500 transition-colors"
-                        aria-label="Mark as Watched"
-                      >
-                        <Check className="w-4 h-4 text-white" />
-                      </button>
-                      <button
-                        className="p-2 rounded-full bg-gray-700 hover:bg-red-500 transition-colors"
-                        aria-label="Bookmark Movie"
-                      >
-                        <Bookmark className="w-4 h-4 text-white" />
-                      </button>
-                    </div>
+              <Link key={movie.id} to={`/movie/${movie.id}`} className="flex-none relative group">
+                <div className="w-48 h-72 relative rounded-lg overflow-hidden">
+                  <img
+                    src={movie.image}
+                    alt={movie.title}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                  <div className="absolute bottom-4 left-4">
+                    <h2 className="text-xl font-bold text-white">{movie.title}</h2>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
