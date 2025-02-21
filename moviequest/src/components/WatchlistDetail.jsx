@@ -61,7 +61,7 @@ export function WatchlistDetail() {
 
       {/* Watchlist Title */}
       <div className="flex items-center justify-between mb-8">
-      <h1 className="text-2xl font-bold ml-8">{listName || 'Watchlist'} </h1>
+      <h1 className="text-2xl font-bold ml-8">{listName || 'Watchlist'} movies</h1>
       <div className="flex items-center space-x-4">
           <button className="text-gray-400 hover:text-white"><Pencil className="w-5 h-5" /></button>
           <button className="text-gray-400 hover:text-white"><Trash2 className="w-5 h-5" /></button>

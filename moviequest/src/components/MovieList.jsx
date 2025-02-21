@@ -39,9 +39,6 @@ export function MovieList() {
           onClick={() => setShowCreateModal(true)}
           className="bg-red-600 text-white px-4 py-2 rounded-md flex items-center space-x-2 hover:bg-red-700"
         >
-           <button className="text-gray-400 hover:text-white"><Pencil className="w-5 h-5" /></button>
-          <button className="text-gray-400 hover:text-white"><Trash2 className="w-5 h-5" /></button>
-          <button className="text-gray-400 hover:text-white"><Download className="w-5 h-5" /></button>
           <Plus className="w-5 h-5" />
           <span>Create New List</span>
         </button>
